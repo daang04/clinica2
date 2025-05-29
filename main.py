@@ -1,13 +1,7 @@
 import streamlit as st
 from streamlit_option_menu import option_menu
+from base_datos import mostrar_base_datos
 
-# Simulación de función de base de datos
-def mostrar_base_datos():
-    st.write("📋 Aquí se mostraría la base de datos de equipos médicos.")
-    st.dataframe({
-        "Equipo": ["ECG", "Rayos X", "Ventilador"],
-        "Estado": ["Operativo", "Mantenimiento", "Disponible"]
-    })
 
 # Diccionario de roles autorizados
 ROLES = {
@@ -16,7 +10,7 @@ ROLES = {
 }
 
 st.set_page_config(page_title="Sistema de Inventario", layout="wide")
-st.title("Autenticación con Roles")
+st.title("PLATAFORMA DE INGENIERÍA CLÍNICA")
 
 # Autenticación
 if not st.user.is_logged_in:
