@@ -43,7 +43,6 @@ if menu == "Inicio":
 
 # Sección de base de datos
 elif menu == "Ver Base de Datos":
-    st.title("📊 Base de Datos de Equipos Médicos")
     mostrar_base_datos()
 
 # Perfil
