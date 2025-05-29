@@ -5,3 +5,4 @@ gspread
 google-auth
 google-auth-oauthlib
 pandas
+oauth2client
