@@ -1,4 +1,13 @@
 import streamlit as st
+from streamlit_option_menu import option_menu
+
+# Simulación de función de base de datos
+def mostrar_base_datos():
+    st.write("📋 Aquí se mostraría la base de datos de equipos médicos.")
+    st.dataframe({
+        "Equipo": ["ECG", "Rayos X", "Ventilador"],
+        "Estado": ["Operativo", "Mantenimiento", "Disponible"]
+    })
 
 # Diccionario de roles autorizados
 ROLES = {
@@ -6,46 +15,58 @@ ROLES = {
     "jear142003@gmail.com": "Practicante"
 }
 
-st.title("Portal de Autenticación con Roles")
+st.set_page_config(page_title="Sistema de Inventario", layout="wide")
+st.title("Autenticación con Roles")
 
 # Autenticación
 if not st.user.is_logged_in:
     st.login("google")
     st.stop()
 
-# Obtener usuario
 email = st.user.email
 name = st.user.name
 role = ROLES.get(email)
 
-# Control de acceso
+# Acceso denegado si el correo no está en la lista
 if role is None:
-    st.error("🚫 Acceso denegado. Tu cuenta no está autorizada para ver esta aplicación.")
+    st.error("🚫 Acceso denegado. Tu cuenta no está autorizada.")
     st.stop()
 
-# =============================
-# ✅ Sidebar (sólo si logueado)
-# =============================
+# Sidebar con menú
 with st.sidebar:
-    st.markdown(f"👤 **{name}**")
-    st.markdown(f"📧 {email}")
-    st.markdown(f"🛡️ Rol: `{role}`")
-    menu = st.selectbox("Navegación", ["Inicio", "Perfil", "Configuración"])
+    st.markdown(f"👤 **{name}**\n📧 {email}\n🛡️ Rol: `{role}`")
+    menu = option_menu(
+        menu_title="Menú Principal",
+        options=["Inicio", "Ver Base de Datos", "Perfil", "Configuración"],
+        icons=["house", "database", "person", "gear"],
+        default_index=0
+    )
 
-# =============================
-# 🎯 Contenido según menú
-# =============================
-st.success(f"Bienvenido, {name} ({role})")
-
+# Sección de inicio
 if menu == "Inicio":
-    st.write("🧭 Estás en la página de inicio.")
-elif menu == "Perfil":
-    st.write("👤 Esta es tu información de perfil.")
-    st.image(st.user.picture)
-    st.json(st.user.to_dict())
-elif menu == "Configuración":
-    st.write("⚙️ Aquí puedes configurar tu entorno (futuro).")
+    st.title("🏥 Bienvenido al Sistema de Inventario")
+    st.write("Navega usando el menú lateral para ver y gestionar los equipos médicos.")
 
-# Botón de logout
-if st.button("Cerrar sesión"):
+# Sección de base de datos
+elif menu == "Ver Base de Datos":
+    st.title("📊 Base de Datos de Equipos Médicos")
+    mostrar_base_datos()
+
+# Perfil
+elif menu == "Perfil":
+    st.title("👤 Perfil del Usuario")
+    st.image(st.user.picture)
+    st.write(f"Nombre: {name}")
+    st.write(f"Correo: {email}")
+    st.write(f"Rol: {role}")
+    with st.expander("Ver token completo"):
+        st.json(st.user.to_dict())
+
+# Configuración
+elif menu == "Configuración":
+    st.title("⚙️ Configuración")
+    st.write("Aquí irán las opciones de configuración personalizadas.")
+
+# Logout
+if st.sidebar.button("Cerrar sesión"):
     st.logout()
